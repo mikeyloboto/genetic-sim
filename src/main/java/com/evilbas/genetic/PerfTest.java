@@ -6,7 +6,7 @@ import com.evilbas.genetic.creature.Creature;
  * Hello world!
  *
  */
-public class Launcher {
+public class PerfTest {
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
         for (int i = 0; i < 1_000; i++) {
