@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 import lombok.Data;
 
 @Data
@@ -84,6 +86,14 @@ public class Brain implements Cloneable {
 
     }
 
+    public Brain clearOutputs() {
+        // Clear
+        for (Neuron n : this.viableOutputs) {
+            n.setValue(0);
+        }
+        return this;
+    }
+
     public void processStep() {
 
         if (random == null) {
@@ -91,9 +101,7 @@ public class Brain implements Cloneable {
         }
 
         // Clear
-        for (Neuron n : this.viableOutputs) {
-            n.setValue(0);
-        }
+        this.clearOutputs();
 
         // Generate Randomness
         this.inputRandom.setValue(random.nextInt(2000) - 1000);
@@ -126,38 +134,36 @@ public class Brain implements Cloneable {
         if (random == null) {
             random = new Random();
         }
-        try {
-            Brain newBrain = (Brain) origin.clone();
-            int choice = random.nextInt(10);
-            // 10% Chance to generate a new neural connection
-            // 30% each to change input/output neuron or connection modifier
-            switch (choice) {
-                case 0:
-                    newBrain.getConnections().add(newBrain.generateConnection());
-                    break;
-                case 1:
-                case 2:
-                case 3:
-                    newBrain.getConnections().get(random.nextInt(newBrain.getConnections().size()))
-                            .setMod(random.nextInt(2000) - 1000);
-                    break;
-                case 4:
-                case 5:
-                case 6:
-                    newBrain.getConnections().get(random.nextInt(newBrain.getConnections().size())).setInput(
-                            newBrain.getViableInputs().get(random.nextInt(newBrain.getViableInputs().size())));
-                    break;
-                case 7:
-                case 8:
-                case 9:
-                    newBrain.getConnections().get(random.nextInt(newBrain.getConnections().size())).setOutput(
-                            newBrain.getViableOutputs().get(random.nextInt(newBrain.getViableOutputs().size())));
-                    break;
-            }
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
+        Brain newBrain = ObjectUtils.clone(origin);
+        newBrain.clearOutputs();
+        int choice = random.nextInt(10);
+        // 10% Chance to generate a new neural connection
+        // 30% each to change input/output neuron or connection modifier
+        switch (choice) {
+            case 0:
+                newBrain.getConnections().add(newBrain.generateConnection());
+                break;
+            case 1:
+            case 2:
+            case 3:
+                newBrain.getConnections().get(random.nextInt(newBrain.getConnections().size()))
+                        .setMod(random.nextInt(2000) - 1000);
+                break;
+            case 4:
+            case 5:
+            case 6:
+                newBrain.getConnections().get(random.nextInt(newBrain.getConnections().size())).setInput(
+                        newBrain.getViableInputs().get(random.nextInt(newBrain.getViableInputs().size())));
+                break;
+            case 7:
+            case 8:
+            case 9:
+                newBrain.getConnections().get(random.nextInt(newBrain.getConnections().size())).setOutput(
+                        newBrain.getViableOutputs().get(random.nextInt(newBrain.getViableOutputs().size())));
+                break;
         }
-        return null;
+
+        return newBrain;
     }
 
     public static Brain generateRandom() {
@@ -194,6 +200,17 @@ public class Brain implements Cloneable {
                 regen = false;
         }
         return result;
+    }
+
+    @Override
+    public Brain clone() {
+        try {
+            return (Brain) super.clone();
+        } catch (CloneNotSupportedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

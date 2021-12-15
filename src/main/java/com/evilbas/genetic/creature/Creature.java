@@ -2,6 +2,8 @@ package com.evilbas.genetic.creature;
 
 import java.util.Random;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 import lombok.Builder;
 import lombok.Data;
 
@@ -50,14 +52,15 @@ public class Creature implements Cloneable {
             random = new Random();
         }
         Creature result = null;
-        try {
-            result = (Creature) parent.clone();
-            if (random.nextInt(1000) == 0) {
-                result.setBrain(Brain.mutate(result.getBrain()));
-            }
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
+
+        result = Creature.builder().dead(false).age(0L).hunger(1000)
+                .brain(ObjectUtils.clone(parent.getBrain()).clearOutputs())
+                .build();
+        if (random.nextInt(1000) == 0) {
+            result.setBrain(Brain.mutate(result.getBrain()));
+            System.out.println("Mutation: " + result.toString());
         }
+
         return result;
     }
 }
