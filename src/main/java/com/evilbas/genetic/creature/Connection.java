@@ -1,8 +1,10 @@
 package com.evilbas.genetic.creature;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class Connection implements Comparable<Connection> {
     private Neuron input;
     private Neuron output;

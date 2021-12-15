@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @Builder(toBuilder = true)
-public class Creature {
+public class Creature implements Cloneable {
     // neural net
     private Brain brain;
     private Long age;
@@ -16,9 +16,10 @@ public class Creature {
 
     private static Random random;
 
-    public void incrementAge() {
+    public void step() {
         if (!this.getDead()) {
             this.age++;
+            this.getBrain().processStep();
             this.hunger--;
             if (hunger == 0) {
                 this.setDead(true);
@@ -32,8 +33,16 @@ public class Creature {
         }
     }
 
+    public void setInputs(Integer north, Integer south, Integer east, Integer west) {
+        this.getBrain().getInputNorth().setValue(north);
+        this.getBrain().getInputSouth().setValue(south);
+        this.getBrain().getInputWest().setValue(west);
+        this.getBrain().getInputEast().setValue(east);
+        this.getBrain().getInputHunger().setValue(this.getHunger());
+    }
+
     public static Creature generateRandomCreature() {
-        return Creature.builder().age(0L).hunger(1000).brain(Brain.generateRandom()).build();
+        return Creature.builder().dead(false).age(0L).hunger(1000).brain(Brain.generateRandom()).build();
     }
 
     public static Creature generateChildCreature(Creature parent) {
@@ -44,7 +53,7 @@ public class Creature {
         try {
             result = (Creature) parent.clone();
             if (random.nextInt(1000) == 0) {
-
+                result.setBrain(Brain.mutate(result.getBrain()));
             }
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();

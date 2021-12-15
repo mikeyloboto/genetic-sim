@@ -8,4 +8,5 @@ import lombok.Data;
 public class Neuron {
     private Integer value;
     private NeuronType type;
+
 }
