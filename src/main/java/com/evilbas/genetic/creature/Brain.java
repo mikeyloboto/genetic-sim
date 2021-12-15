@@ -14,9 +14,7 @@ public class Brain {
     private Neuron inputSouth;
 
     private Neuron inputRandom;
-
     private Neuron inputHunger;
-
     private Neuron inputAge;
 
     // Hidden
