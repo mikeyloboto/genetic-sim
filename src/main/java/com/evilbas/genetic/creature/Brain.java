@@ -130,6 +130,30 @@ public class Brain implements Cloneable {
         }
     }
 
+    private String mapConnectionsRecursive(Neuron n, List<Connection> scanned, Boolean first) {
+        StringBuilder output = new StringBuilder();
+        for (Connection c : this.connections) {
+            if (c.getInput() == n) {
+                if (scanned.contains(c)) {
+                    break;
+                } else {
+                    scanned.add(c);
+                    if (first) {
+                        output.append(c.getInput().toString());
+                    }
+                    output.append(" -> ");
+                    output.append(c.getMod());
+                    output.append(" -> ");
+                    output.append(c.getOutput().toString());
+
+                    output.append(mapConnectionsRecursive(c.getOutput(), scanned, false));
+                }
+            }
+        }
+
+        return output.toString();
+    }
+
     public static Brain mutate(Brain origin) {
         if (random == null) {
             random = new Random();
@@ -164,6 +188,18 @@ public class Brain implements Cloneable {
         }
 
         return newBrain;
+    }
+
+    public String mapBrain() {
+        StringBuilder sb = new StringBuilder();
+        List<Connection> stepConnections = new ArrayList<>();
+        for (Connection c : this.connections) {
+            String out = mapConnectionsRecursive(c.getInput(), stepConnections, true);
+            if (out != null && !out.equals(""))
+                sb.append(out);
+            sb.append('\n');
+        }
+        return sb.toString();
     }
 
     public static Brain generateRandom() {

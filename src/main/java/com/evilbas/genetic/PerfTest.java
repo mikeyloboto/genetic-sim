@@ -29,6 +29,6 @@ public class PerfTest {
         long endStep = System.currentTimeMillis() - startStep;
 
         System.out.println("Simulation time: " + endStep + "ms. 1 creature. 1000 steps.");
-        System.out.println(test.toString());
+        System.out.println(test.getBrain().mapBrain());
     }
 }

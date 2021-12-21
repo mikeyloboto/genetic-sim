@@ -58,7 +58,7 @@ public class Creature implements Cloneable {
                 .build();
         if (random.nextInt(1000) == 0) {
             result.setBrain(Brain.mutate(result.getBrain()));
-            System.out.println("Mutation: " + result.toString());
+            System.out.println("Mutation: " + result.getBrain().mapBrain());
         }
 
         return result;
