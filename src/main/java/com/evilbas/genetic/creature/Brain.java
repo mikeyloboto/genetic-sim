@@ -84,6 +84,9 @@ public class Brain implements Cloneable {
 
         this.connections = new ArrayList<>();
 
+        System.out.println("Inputs: " + viableInputs);
+        System.out.println("Outputs: " + viableOutputs);
+
     }
 
     public Brain clearOutputs() {
